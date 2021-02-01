@@ -1,23 +1,47 @@
-import logo from './logo.svg';
 import './App.css';
+import Phaser from 'phaser';
+import * as BreakoutPhaser from './BreakoutPhaser';
+import { useEffect, useState } from 'react';
+import Button from '@material-ui/core/Button';
+
+
+function BreakoutGame(props) {
+  useEffect(()=>{
+    if (window.game){return}
+    var config = {
+      type: Phaser.AUTO,
+      width: 400,
+      height: 300,
+      physics: {
+          default: 'arcade'
+      },
+      scene: {
+          preload: BreakoutPhaser.preload,
+          create: BreakoutPhaser.create,
+          update: BreakoutPhaser.update
+      },
+      parent: 'canvas'
+    };
+    
+    window.game = new Phaser.Game(config)
+    BreakoutPhaser.setOnLevelChanged((level) => {
+      console.log("In react setOnLevelChanged", level);
+      props.onLevelChanged(level)
+    })
+  })
+
+  return(
+    <div id="canvas"></div>
+  )
+}
 
 function App() {
+  let [level, setLevel] = useState(1)
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      Breakout: Level {level}
+      <BreakoutGame onLevelChanged={setLevel}/>
+      <Button variant="contained" onClick={() => BreakoutPhaser.win()}>I Win</Button>
     </div>
   );
 }
