@@ -56,13 +56,11 @@ let onLevelChanged = (level) => {
   console.log(level);
 }
 
-
 let curLev = 1;
-let level = Levels.stageLevels[`level_${curLev}`];
 
 export function preload ()
 {
-  console.log("In preload");
+  // console.log("In preload");
   this.load.image('eye', 'assets/lance-overdose-loader-eye.png');
   this.load.image('ball', 'assets/58-Breakout-Tiles.png');
   this.load.image('background', 'assets/1624.jpg');
@@ -86,7 +84,7 @@ export function preload ()
 
 export function create ()
 {
-  console.log("In create");
+  // console.log("In create");
   background = this.add.sprite(0,0,'background').setScale(.45)
   paddleSound = this.sound.add('ballOnPaddle');
   brickSound = this.sound.add('ballOnBrick');
@@ -219,7 +217,7 @@ export function update()
     }
     if (brickCount === 0 && curLev <= stageCount()){
       curLev+=1;
-      level = Levels.stageLevels[`level_${curLev}`];
+      // level = Levels.stageLevels[`level_${curLev}`];
       onLevelChanged(curLev)
 
       brickCount = -1;
@@ -362,6 +360,9 @@ function stageCount(){
 
 function placeBricks(context){
   brickCount = 0;
+  console.log(Levels.stageLevels['level_3']);
+  console.log(curLev);
+  let level = Levels.stageLevels[`level_${curLev}`];
   for (let row=0; row<level.length; row++) {
     for (let col=0; col<level[row].length; col++) {
       let brickWidth = ((context.cameras.main.centerX * 2) / level[row].length);
@@ -403,6 +404,13 @@ export function win(){
 
 export function setOnLevelChanged(cb){
   onLevelChanged = cb;
+}
+
+export function setCurLevel(savedLevel){
+
+  curLev = savedLevel;
+  console.log(savedLevel, curLev);
+  // level = Levels.stageLevels[`level_${curLev}`];
 }
 
 
